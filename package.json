@@ -1,0 +1,8 @@
+{
+  "name": "visual-typescript",
+  "version": "0.0.0",
+  "volta": {
+    "node": "22.16.0",
+    "pnpm": "10.11.0"
+  }
+}
