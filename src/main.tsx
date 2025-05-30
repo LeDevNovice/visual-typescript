@@ -1,11 +1,14 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 
+import queryRoot from './utils/queryRoot.ts'
 import App from './App.tsx'
 
 import './index.css'
 
-createRoot(document.getElementById('root')!).render(
+const container = queryRoot('#root');
+
+createRoot(container).render(
   <StrictMode>
     <App />
   </StrictMode>,
