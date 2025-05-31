@@ -11,7 +11,8 @@
     "preview": "vite preview",
     "type-check": "tsc --noEmit",
     "type-coverage": "type-coverage --at-least 95",
-    "deadcode": "ts-prune --error"
+    "deadcode": "ts-prune --error",
+    "prepare": "husky"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.8",
@@ -20,6 +21,8 @@
     "tailwindcss": "^4.1.8"
   },
   "devDependencies": {
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
     "@eslint/js": "^9.25.0",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
@@ -33,6 +36,8 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^16.0.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.0",
     "prettier": "^3.5.3",
     "ts-prune": "^0.10.3",
     "type-coverage": "^2.29.7",
@@ -44,5 +49,14 @@
   "volta": {
     "node": "22.16.0",
     "pnpm": "10.11.0"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "*.{json,md,css}": [
+      "prettier --write"
+    ]
   }
 }
