@@ -1,0 +1,65 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  quality-gates:
+    runs-on: ubuntu-latest
+    name: Lint | Type-Coverage | Dead-Code | Tests | Build
+
+    strategy:
+      matrix:
+        node-version: [22]
+
+    steps:
+      # 1. Checkout code
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # 2. Setup Node + pnpm
+      - name: Use Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+
+      - name: Install pnpm
+        run: npm i -g pnpm@${{ '10' }}
+
+      # 3. Restore pnpm store
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+
+      # 4. Install deps
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # 5. Lint + Prettier
+      - name: ESLint
+        run: pnpm lint
+
+      # 6. Type coverage (≥ 95 %)
+      - name: Type-coverage ≥ 95 %
+        run: pnpm type-coverage
+
+      # 7. Dead-code scan
+      - name: ts-prune (dead exports)
+        run: pnpm deadcode
+
+      # 8. Unit tests
+      - name: Vitest
+        run: pnpm vitest run --coverage
+
+      # 9. Build artefact
+      - name: Build
+        run: pnpm build
